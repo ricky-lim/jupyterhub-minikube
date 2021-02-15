@@ -5,8 +5,6 @@ RELEASE := mini-jupyterhub
 NAMESPACE := jupyterhub
 # Helm package version
 VERSION := 0.9.0
-# Docker image version
-version := latest
 
 ## Setup minikube
 setup:
