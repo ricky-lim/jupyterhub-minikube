@@ -3,8 +3,8 @@ SHELL := /bin/bash -O globstar
 
 RELEASE := mini-jupyterhub
 NAMESPACE := jupyterhub
-# Helm package version
-VERSION := 0.9.0
+HELM_VERSION := 0.9.0
+DOCKER_VERSION := fastapi
 
 ## Setup minikube
 setup:
@@ -19,17 +19,17 @@ init:
 
 ## Create a docker image for singleuser
 singleuser:
-	cd singleuser && docker build -t singleuser:minikube .
+	cd singleuser && docker build -t singleuser:$(DOCKER_VERSION) .
 
 ## Create a docker image for hub.
 hub :
-	cd hub && docker build -t hub:minikube .
+	cd hub && docker build -t hub:$(DOCKER_VERSION) .
 
 ## Install jupyterhub
-install:
+install: hub singleuser
 	helm upgrade --install ${RELEASE} jupyterhub/jupyterhub \
-      --namespace ${NAMESPACE} --version=${VERSION} \
-      --values config-minikube.yaml
+      --namespace ${NAMESPACE} --version=${HELM_VERSION} \
+      --values config.yaml
 
 ## Port forwarding (available at localhost:8000)
 port-forward:
@@ -38,7 +38,7 @@ port-forward:
 ## Upgrade jupyterhub
 upgrade:
 	helm upgrade ${RELEASE} jupyterhub/jupyterhub --namespace ${NAMESPACE} \
-      --version=${VERSION} --values config-minikube.yaml
+      --version=${HELM_VERSION} --values config.yaml
 
 ## Uninstall jupyterhub
 uninstall:

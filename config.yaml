@@ -5,7 +5,7 @@ proxy:
 hub:
   image:
     name: hub
-    tag: minikube
+    tag: fastapi
     # Ensure to use use local docker image
     pullPolicy: "IfNotPresent"
   allowNamedServers: true
@@ -45,7 +45,6 @@ hub:
       c.Spawner.cmd = ['start.sh', 'jupyterhub-singleuser', '--allow-root']
       c.KubeSpawner.http_timeout = 600
       c.KubeSpawner.start_timeout = 600
-      c.CDSDashboardsConfig.spawn_allow_group = 'developer-group'
     02-cds-handlers: |
       from cdsdashboards.hubextension import cds_extra_handlers
 
@@ -55,10 +54,10 @@ hub:
       c.VariableMixin.proxy_last_activity_interval = 600
       c.VariableMixin.proxy_request_timeout = 600
     03-cds-templates: |
-      from cdsdashboards.app import CDS_TEMPLATE_PATHS_RESTRICTED
+      from cdsdashboards.app import CDS_TEMPLATE_PATHS
 
 
-      c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS_RESTRICTED
+      c.JupyterHub.template_paths = CDS_TEMPLATE_PATHS
       c.VariableMixin.extra_presentation_launchers = {
           'voila-rz': {
                       'args': ['--destport=0', 'python3', '{-}m','voila',
@@ -77,7 +76,8 @@ hub:
               'args': ['--destport=0', 'python3',
                        '{presentation_path}',
                        '{--}root-path={base_url}',
-                       '{--}port={port}',
+                       '{--}port={port}', 
+                       '--forward-user-info',
               ],
           },
       }
@@ -85,7 +85,6 @@ hub:
           'jhsingle_native_proxy.main']
       c.CDSDashboardsConfig.presentation_types = ['voila', 'main']
       c.CDSDashboardsConfig.allow_custom_conda_env = True
-      c.CDSDashboardsConfig.show_source_git = False
       c.JupyterHub.template_vars = {
           'cds_hide_user_named_servers': True,
           'cds_hide_user_dashboard_servers': True,
@@ -103,7 +102,7 @@ singleuser:
   uid: 0
   image:
     name: singleuser
-    tag: minikube
+    tag: fastapi
     pullPolicy: "IfNotPresent"
   storage:
     type: dynamic
