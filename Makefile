@@ -3,7 +3,7 @@ SHELL := /bin/bash -O globstar
 
 RELEASE := mini-jupyterhub
 NAMESPACE := jupyterhub
-HELM_VERSION := 0.9.0
+HELM_VERSION := 0.11.1
 DOCKER_VERSION := fastapi
 
 ## Setup minikube

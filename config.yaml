@@ -14,6 +14,14 @@ hub:
       accessModes:
         - ReadWriteMany
       storage: 1Gi
+  config:
+    Authenticator:
+      admin_users:
+        - ril
+    DummyAuthenticator:
+      password: 'password'
+    JupyterHub:
+      authenticator_class: DummyMiniAuthenticator
   extraConfig:
     00-auth: |
       # To set the spawner.environment
@@ -76,7 +84,7 @@ hub:
               'args': ['--destport=0', 'python3',
                        '{presentation_path}',
                        '{--}root-path={base_url}',
-                       '{--}port={port}', 
+                       '{--}port={port}',
                        '--forward-user-info',
               ],
           },
@@ -128,16 +136,3 @@ cull:
   timeout: 86400 # 1 day idle
   every: 172800 # 2 day
 
-auth:
-  type: custom
-  custom:
-    className: 'DummyMiniAuthenticator'
-  dummy:
-    password: 'password'
-  admin:
-    access: true
-    users:
-      - ril
-  whitelist:
-    users:
-      - ril
