@@ -30,5 +30,14 @@ make upgrade
 
 # Uninstall jupyterhub
 make uninstall
+
+# Optional using `.envrc`, more info: https://direnv.net/
+$ cat .envrc
+eval $(minikube docker-env)
+kubectx minikube
+kubens jupyterhub
+
 ```
+
+
 
