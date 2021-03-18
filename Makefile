@@ -31,9 +31,9 @@ install: hub singleuser
       --namespace ${NAMESPACE} --version=${HELM_VERSION} \
       --values config.yaml
 
-## Port forwarding (available at localhost:8000)
-port-forward:
-	kubectl port-forward svc/proxy-public 8000:80
+## Available at 0.0.0.0:8000
+serve:
+	kubectl port-forward svc/proxy-public --address 0.0.0.0 8000:80
 
 ## Upgrade jupyterhub
 upgrade:
